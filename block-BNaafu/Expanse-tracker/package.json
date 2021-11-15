@@ -1,0 +1,23 @@
+{
+  "name": "expanse-tracker",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "connect-mongo": "^4.6.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "flash": "^1.1.0",
+    "http-errors": "~1.6.3",
+    "mongoose": "^6.0.12",
+    "morgan": "~1.9.1",
+    "passport": "^0.5.0",
+    "passport-github": "^1.1.0",
+    "passport-google": "^0.3.0"
+  }
+}
