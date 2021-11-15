@@ -4,12 +4,28 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose=require('mongoose');
+var session=require('express-session');
+var MongoStore = require('connect-mongo');
+var flash=require('connect-flash');
+var auth=require('./middlewares/auth');
+
+
+
+var passport=require('passport');
+require('./modules/passport');
+
+
+
 
 var indexRouter = require('./routes/index');
+var articlesRouter = require('./routes/articles');
+var commentsRouter=require('./routes/comments');
 var usersRouter = require('./routes/users');
 
 var app = express();
-mongoose.connect('mongodb://localhost/expanse-tracker',(err)=>{
+
+//connect to database
+mongoose.connect('mongodb://localhost/users',(err)=>{
   console.log(err?err:'Connected to Database');
 })
 
@@ -23,8 +39,27 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.use(session({
+  secret:process.env.SECRET,
+  resave:false,
+  saveUninitialized:false,
+  store:  MongoStore.create({mongoUrl:'mongodb://localhost/blog'})
+}))
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+//flash middleware
+app.use(flash());
+
+
+app.use(auth.userInfo);
+
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/articles', articlesRouter);
+app.use('/comments',commentsRouter);
+app.use('/users',usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -41,5 +76,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 
 module.exports = app;
