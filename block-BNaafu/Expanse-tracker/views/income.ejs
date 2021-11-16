@@ -1,0 +1,15 @@
+<%include partials/header %>
+  <main class="container flex center">
+    <div class="main form-h1">
+      <h1>Fill the below details</h1>
+    </div>
+    <div class="form">
+        <form action="/articles/income" method="POST">
+            <input type="text" name="source" id="" placeholder="Enter the sources">          
+            <input type="number" name="amount" id="" placeholder="Enter the amount">
+            <input type="submit" value="Add Income" class="submit">
+        </form>
+    
+    </div>
+  </main>
+  <%include partials/footer%>

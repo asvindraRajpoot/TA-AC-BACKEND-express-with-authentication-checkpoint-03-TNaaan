@@ -3,20 +3,47 @@
   </header>
   <main class="container flex center">
     <div class="main form-h1">
-      <h1>Articles List</h1>
+      <h1>Income and Expanses</h1>
     </div>
     <div class="container">
-        <ul>
-           <%articles.forEach(article=>{%>
+        <%var totalIncome=0%>
+        <%var totalExpanse=0%>
 
-            <li><%=article.title%></li>
-            <div class="show">
-                <a href="/articles/<%=article.id%>">Show</a>
-            </div>
+        
+        <ul>
+          <h2 class="green">Income</h2>
+         
+           <%income.forEach(income=>{%>
+           
+            <%totalIncome+=income.amount%>
+            <div>
+              <li>Sources: <%=income.source%></li> 
+            
+              <li>Amount: <%=income.amount%></li>  
+            </div>     
 
            <%})%>
+           <h2 class="green">Income of Current month:<%=totalIncome%></h2>
         </ul>
+        
+
+        <ul>
+          <h2 class="red">Expanse</h2>
+          <%expanse.forEach(expanse=>{%>
+            <%totalExpanse+=expanse.amount%>
+
+           <div>
+             <li>Category: <%=expanse.category%></li> 
+             <li>Amount: <%=expanse.amount%></li>  
+           </div>     
+
+          <%})%>
+          <h2 class="red">Expanses of Current month:<%=totalExpanse%></h2>
+       </ul>
+       <h2 class="blue">Total Saving of the month: <%=totalIncome-totalExpanse%></h2>
     </div>
+   
+   
 
   </main>
   <%include partials/footer%>

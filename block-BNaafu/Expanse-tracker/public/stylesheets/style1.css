@@ -445,3 +445,20 @@ h6{
 .google{
   margin-left: 1rem;
 }
+
+.social{
+  display: flex;
+ justify-content: center;
+ margin-top: 2rem;
+}
+
+.red{
+  color: red;
+}
+.green{
+  color: green;
+}
+
+.blue{
+  color: blue;
+}
