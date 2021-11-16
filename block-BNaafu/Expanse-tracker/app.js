@@ -8,6 +8,7 @@ var session=require('express-session');
 var MongoStore = require('connect-mongo');
 var flash=require('connect-flash');
 var auth=require('./middlewares/auth');
+var nodemailer = require('nodemailer');
 
 
 
@@ -20,6 +21,7 @@ require('./modules/passport');
 var indexRouter = require('./routes/index');
 var articlesRouter = require('./routes/articles');
 //var commentsRouter=require('./routes/comments');
+//var verifyemailRouter = require('./routes/verifyEmail');
 var usersRouter = require('./routes/users');
 
 var app = express();
@@ -56,9 +58,15 @@ app.use(flash());
 
 app.use(auth.userInfo);
 
+//nodemailer
+
+
+
+
 app.use('/', indexRouter);
 app.use('/articles', articlesRouter);
 //app.use('/comments',commentsRouter);
+//app.use('/verifyEmail', verifyemailRouter);
 app.use('/users',usersRouter);
 
 // catch 404 and forward to error handler

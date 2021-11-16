@@ -36,9 +36,6 @@ userSchema.methods.verifyPassword=function(password,cb){
     })
 }
 
-userSchema.methods.fullName=function(firstName,lastName,cb){
-    return cb(err,firstName+" "+lastName);
-}
 
 
 
