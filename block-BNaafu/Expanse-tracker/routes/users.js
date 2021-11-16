@@ -56,7 +56,7 @@ router.post('/register', (req, res, next) => {
 router.post('/login', (req, res, next) => {
 
   var { email, password } = req.body;
-  //console.log(email,password);
+  console.log(email,password);
   if (!email || !password) {
     req.flash('error', 'Email/Password is required');
     return res.redirect('/users/login');

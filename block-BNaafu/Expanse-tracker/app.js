@@ -19,7 +19,7 @@ require('./modules/passport');
 
 var indexRouter = require('./routes/index');
 var articlesRouter = require('./routes/articles');
-var commentsRouter=require('./routes/comments');
+//var commentsRouter=require('./routes/comments');
 var usersRouter = require('./routes/users');
 
 var app = express();
@@ -58,7 +58,7 @@ app.use(auth.userInfo);
 
 app.use('/', indexRouter);
 app.use('/articles', articlesRouter);
-app.use('/comments',commentsRouter);
+//app.use('/comments',commentsRouter);
 app.use('/users',usersRouter);
 
 // catch 404 and forward to error handler
