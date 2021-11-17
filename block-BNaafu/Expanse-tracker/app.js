@@ -9,11 +9,13 @@ var MongoStore = require('connect-mongo');
 var flash=require('connect-flash');
 var auth=require('./middlewares/auth');
 var nodemailer = require('nodemailer');
+var dotenv=require('dotenv').config();
 
 
 
 var passport=require('passport');
 require('./modules/passport');
+require('./middlewares/sendMail');
 
 
 
@@ -59,6 +61,7 @@ app.use(flash());
 app.use(auth.userInfo);
 
 //nodemailer
+
 
 
 
