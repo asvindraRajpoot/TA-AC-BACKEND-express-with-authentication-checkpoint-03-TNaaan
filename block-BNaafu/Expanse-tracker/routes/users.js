@@ -109,4 +109,32 @@ router.get('/logout', (req, res) => {
 
 
 
+
+//forgot password
+router.get('/forgot',(req,res)=>{
+  res.render('forgotPassword');
+})
+
+
+//mail send 
+router.post('/forgot',(req,res)=>{
+
+console.log(req.body);
+//check mail exist or not 
+  res.render('otp');
+})
+
+//check for otp
+router.post('/otp',(req,res)=>{
+  console.log(req.body);
+  //match the otp then 
+  res.render('changePassword');
+})
+
+//changed password
+router.post('/new/password',(req,res)=>{
+  //check password is updated in database or not
+  res.redirect('/users/login');
+})
+
 module.exports = router;

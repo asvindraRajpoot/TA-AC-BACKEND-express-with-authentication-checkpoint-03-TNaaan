@@ -14,7 +14,7 @@ let transporter=nodemailer.createTransport({
   //
   let mailOptions={
     from:'aswin1399904@gmail.com',
-    to:'lovekushrazput143@gmail.com,upendrarajput9911@gmail.com,rishabh1399904@gmail.com',
+    to:'arti1399904@gmail.com',
     cc:'aswin1399904@gmail.com',
     subject:'Testing and Tesing',
     text:'Hello🌹'        
