@@ -1,0 +1,29 @@
+<%include partials/header %>
+
+  </header>
+  <main class="container flex center">
+    <div class="main form-h1">
+      <h1>My All Incomes</h1>
+    </div>
+    <div class="container btns">
+        <%var total=0%>
+        <div class="container colom">
+            <%income.forEach(income=>{%>
+                <li>
+                    <%=income.source%>: 
+    
+                    <%=income.amount%>
+                </li>
+                <%total+=income.amount%>
+    
+            <%})%>
+            <h2 class="green left ">Total Income:<%=total%></h2>
+        </div>
+ 
+
+    </div>
+
+   
+
+  </main>
+  <%include partials/footer%>

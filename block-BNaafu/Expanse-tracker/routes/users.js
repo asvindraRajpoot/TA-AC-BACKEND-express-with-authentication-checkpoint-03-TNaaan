@@ -120,8 +120,10 @@ router.get('/forgot',(req,res)=>{
 router.post('/forgot',(req,res)=>{
 
 console.log(req.body);
+const {email}=req.body;
 //check mail exist or not 
-  res.render('otp');
+res.send(email)
+  //res.render('otp');
 })
 
 //check for otp

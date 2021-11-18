@@ -1,0 +1,26 @@
+<%include partials/header %>
+
+  </header>
+  <main class="container flex center">
+    <div class="main form-h1">
+      <h1>My All Expanses</h1>
+    </div>
+    <div class="container btns colom">
+        <%var total=0%>
+        <%data.forEach(expanse=>{%>
+            <li>
+                <%=expanse.category%>: 
+
+                <%=expanse.amount%>
+            </li>
+            <%total+=expanse.amount%>
+
+        <%})%>
+        <h2 class="green left ">Total Expanse:<%=total%></h2>
+
+    </div>
+
+   
+
+  </main>
+  <%include partials/footer%>

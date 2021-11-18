@@ -1,0 +1,39 @@
+<%include partials/header %>
+
+  </header>
+  <main class="container flex center">
+    <div class="main form-h1">
+      <h1>My Total Savings</h1>
+    </div>
+    <div class="container btns">
+        <%var totalIncome=0%>
+        <%var totalExpanse=0%>
+        <div class="container colom">
+            <%Income.forEach(income=>{%>
+                
+                <%totalIncome+=income.amount%>
+                <li> Amount of <%=income.source%>:<%=income.amount%></li>
+    
+            <%})%>
+            <h2 class="green left ">Total Income:<%=totalIncome%></h2>
+        </div>
+        <div class="container colom">
+            <%Expanse.forEach(expanse=>{%>
+               
+                <%totalExpanse+=expanse.amount%>
+                <li>Amount of <%=expanse.category%> :<%=expanse.amount%></li>
+            <%})%>
+            <h2 class="red left ">Total Expanse:<%=totalExpanse%></h2>
+        </div>
+        <div class="container colom">
+            <h2 class="blue">Total Saving:<%=totalIncome-totalExpanse%></h2>
+
+        </div>
+ 
+
+    </div>
+
+   
+
+  </main>
+  <%include partials/footer%>

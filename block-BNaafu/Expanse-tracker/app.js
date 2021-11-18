@@ -15,7 +15,7 @@ var dotenv=require('dotenv').config();
 
 var passport=require('passport');
 require('./modules/passport');
-require('./middlewares/sendMail');
+//require('./middlewares/sendMail');
 
 
 
