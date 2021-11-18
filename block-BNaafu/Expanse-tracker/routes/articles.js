@@ -197,8 +197,9 @@ router.post('/dateAndCategory',(req,res)=>{
   let date=req.body.date
   let category=req.body.category
   //console.log(date.toISOString());
-
-    Expanse.find({'date':date,category:category},(err,data)=>{
+   console.log(date,category);
+    Expanse.find({'date':{$gte:date},'date':{$lte:date}},(err,data)=>{
+      console.log(data);
       res.render('expansesList',{data})
     })
  
@@ -218,33 +219,17 @@ router.post('/monthAndYear',(req,res)=>{
   let year=req.body.year
 
 
-  Income.find({},(err,incomes)=>{
-    //console.log(err,income);
-   let filteredIncomes =incomes.filter(ele=>{
+  Income.find({$match:{ $month:month,$year:year}},(err,Income)=>{
+    console.log(err,Income);
+ 
 
-    console.log('incomes',(ele.date).toLocaleDateString());
-    let dbMonth=ele.date;
-    let dbYear=ele.date;
-    if(month===dbMonth || year===dbYear){
-      return ele;
-    }
+  
+  
+    Expanse.find({},(err,Expanse)=>{
 
+      
 
-    })
-    Expanse.find({},(err,expanses)=>{
-
-      let filteredExpanses =expanses.filter(ele=>{
-
-        console.log('expanses',(ele.date).toLocaleDateString());
-    
-        })
-        let dbMonth=ele.date;
-        let dbYear=ele.date;
-        if(month===dbMonth  || year===dbYear){
-          return ele;
-        }
-
-      res.render('incomeAndExpanseList',{filteredIncomes,filteredExpanses})
+      res.render('monthAndYearList',{Income,Expanse})
     })
   })
  

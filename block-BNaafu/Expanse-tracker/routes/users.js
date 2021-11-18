@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var flash = require('connect-flash');
 var auth=require('../middlewares/auth');
+var sendMail=require('../middlewares/sendMail');
 
 var User = require('../models/user');
 /* GET users listing. */
@@ -42,10 +43,13 @@ router.post('/register', (req, res, next) => {
         req.flash('error', err.message);
         return res.redirect('/users/register');
       }
+
+     
       return res.json({ err });
     }
     //console.log('after saving into database',user);
     // req.flash('error','User hasbeen Successfully registered');
+    sendMail.Mail(req.body.email,'123');
     res.redirect('/users/logIn');
   })
 
