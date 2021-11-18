@@ -10,6 +10,8 @@ var userSchema=new Schema({
     age:Number,
     phone:Number,
     country:String,
+    verified:Boolean,
+    otp:Number,
 },{timestamps:true})
 
 
