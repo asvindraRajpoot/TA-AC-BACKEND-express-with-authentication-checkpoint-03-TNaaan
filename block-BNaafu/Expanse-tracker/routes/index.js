@@ -24,8 +24,10 @@ router.get('/auth/github/callback',passport.authenticate('github',{failureRedire
 (req,res)=>{
   let error = req.flash('error')[0];
   req.session.userId = req.user.id;
+
+  res.locals.user=req.user;
    console.log(req.user);
-  res.render('home', { error });
+   res.redirect('/articles/home');
 }
     
 )
@@ -43,7 +45,8 @@ router.get('/auth/google/callback',
     // Successful authentication, redirect home.
     let error = req.flash('error')[0];
     req.session.userId = req.user.id;
-    res.render('home', { error });
+    res.locals.user=req.user;
+    res.redirect('/articles/home');
   });
 
 
