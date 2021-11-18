@@ -17,8 +17,11 @@ module.exports={
             from:'aswin1399904@gmail.com',
             to:mailId,
             cc:'aswin1399904@gmail.com',
-            subject:'Testing and Tesing',
-            text:otp        
+            subject:'OTP Verification',
+            html:"<h3>OTP for account verification is </h3>" + "<h1 style='font-weight:bold;'>" + otp + "</h1>"
+
+
+  
           }
           
           

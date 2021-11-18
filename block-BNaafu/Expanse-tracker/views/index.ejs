@@ -1,14 +1,21 @@
 <%include partials/header %>
     <main>
-      <h1>Welcome to Web Developement</h1>
+      
       <div class="goto  justify-center goto-articles">
         <!-- <a href="/articles" class="btn">
          Goto Articles
         </a> -->
-        <div class="flex  social">
-          <a href="/auth/github" >Login with Github</a>
-          <a href="/auth/google" class="google">Login with google</a>
-        </div>
+        <%if(user){%>
+          <h1>Welcome to Expanse Tracker</h1>
+          <a href="/articles/home" class="create" >Goto Dashboard</a>
+
+        <%}else{%>
+          <div class="flex  social">
+            <a href="/auth/github" >Login with Github</a>
+            <a href="/auth/google" class="google">Login with google</a>
+          </div>
+        <%}%>
+     
         
        
        </div>

@@ -31,7 +31,9 @@ router.get('/register', (req, res, next) => {
 
 //capture the from registration form
 router.post('/register', (req, res, next) => {
-  console.log(req.body);
+  //console.log(req.body);
+  let otp= Math.floor(Math.random()*1000000)+1;
+  req.body.otp=otp;
   User.create(req.body, (err, user) => {
     if (err) {
       if (err.code === 'MongoError') {
@@ -49,8 +51,18 @@ router.post('/register', (req, res, next) => {
     }
     //console.log('after saving into database',user);
     // req.flash('error','User hasbeen Successfully registered');
-    sendMail.Mail(req.body.email,'123');
-    res.redirect('/users/logIn');
+   
+    sendMail.Mail(req.body.email,otp);
+    
+    // console.log(req.body,user);
+    //  User.findOneAndUpdate(user.id,req.body,{upsert:true},(err,updatedUser)=>{
+    // //   if(err)return next(err)
+    //    console.log('updated user with otp field',updatedUser);
+    // //   res.redirect('/users/otp');
+    //  })
+    res.redirect('/users/otp');
+
+    
   })
 
 })
@@ -121,20 +133,59 @@ router.get('/forgot',(req,res)=>{
 
 
 //mail send 
-router.post('/forgot',(req,res)=>{
+router.post('/forgot',(req,res,next)=>{
 
 console.log(req.body);
 const {email}=req.body;
+let otp= Math.floor(Math.random()*1000000)+1;
+req.body.otp=otp;
 //check mail exist or not 
-res.send(email)
-  //res.render('otp');
+User.find({email:email},(err,user)=>{
+  if(err)return next(err);
+  if(user){
+ 
+    sendMail.Mail(email,otp);
+    //save the otp in database
+    res.redirect('/users/otp')
+
+  }
+})
+ 
+  res.render('otp');
+})
+
+
+//render otp page
+router.get('/otp',(req,res)=>{
+  res.render('otp');
 })
 
 //check for otp
-router.post('/otp',(req,res)=>{
-  console.log(req.body);
+router.post('/otp',(req,res,next)=>{
+  //console.log(req.body);
   //match the otp then 
-  res.render('changePassword');
+  let otp=req.body.otp;
+  //find the user is registered or not
+  User.find({otp:otp},(err,user)=>{
+    if(err)return next(err);
+    //console.log(user);
+    console.log(otp,user,user[0].otp);
+    if(Number(otp)===Number(user[0].otp)){
+       //otp verified
+       req.body.verified=true;
+       req.body.otp=null;
+       console.log('otp verified');
+       User.findByIdAndUpdate(user._id,req.body,(err,updatedUser)=>{
+         if(err)return next(err);
+         console.log(updatedUser);
+         res.redirect('/users/login');
+       })
+    }
+    
+
+  })
+   
+  //res.render('changePassword');
 })
 
 //changed password

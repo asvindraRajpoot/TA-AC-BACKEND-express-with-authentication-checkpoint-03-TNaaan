@@ -17,7 +17,7 @@ var userSchema=new Schema({
 
 //pre(save)hook
 userSchema.pre('save',function(next){
-    console.log(this,'before saving into database');
+   // console.log(this,'before saving into database');
     if(this.password && this.isModified('password')){
         bcrypt.hash(this.password,10,(err,hashed)=>{
             if(err)return next(err);
