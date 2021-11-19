@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var flash = require('connect-flash');
-var auth=require('../middlewares/auth');
-var sendMail=require('../middlewares/sendMail');
+var auth = require('../middlewares/auth');
+var sendMail = require('../middlewares/sendMail');
 
 var User = require('../models/user');
 /* GET users listing. */
@@ -30,40 +30,40 @@ router.get('/register', (req, res, next) => {
 
 
 //capture the from registration form
-router.post('/register', (req, res, next) => {
+router.post('/register', async function (req, res, next) {
   //console.log(req.body);
-  let otp= Math.floor(Math.random()*1000000)+1;
-  req.body.otp=otp;
-  User.create(req.body, (err, user) => {
-    if (err) {
-      if (err.code === 'MongoError') {
-        req.flash('error', 'This email is taken');
-        return res.redirect('/users/registers');
-      }
 
-      if (err.name === 'ValidationError') {
-        req.flash('error', err.message);
-        return res.redirect('/users/register');
-      }
+  let user = await User.create(req.body)
 
-     
-      return res.json({ err });
+  if (user) {
+    console.log('created using await', user);
+    let otp = Math.floor(Math.random() * 1000000) + 1;
+    req.body.otp = otp;
+
+
+    // console.log('',req.body,user);
+    const updatedUser = await User.findOne({ _id: user._id }, { upsert: true })
+    updatedUser.otp = otp;
+    await updatedUser.save()
+    const updatedOtpUser = await User.findOne({ _id: user._id })
+    console.log('updated user', updatedOtpUser);
+    if (updatedOtpUser) {
+      sendMail.Mail(req.body.email, otp);
+      res.redirect('/users/otp');
+
+    } else {
+      res.json({ msg: 'not updated with otp' })
+
+
     }
-    //console.log('after saving into database',user);
-    // req.flash('error','User hasbeen Successfully registered');
-   
-    sendMail.Mail(req.body.email,otp);
-    
-    // console.log(req.body,user);
-    //  User.findOneAndUpdate(user.id,req.body,{upsert:true},(err,updatedUser)=>{
-    // //   if(err)return next(err)
-    //    console.log('updated user with otp field',updatedUser);
-    // //   res.redirect('/users/otp');
-    //  })
-    res.redirect('/users/otp');
+  } else {
+    res.redirect('/users/register');
+  }
 
-    
-  })
+
+
+
+
 
 })
 
@@ -72,7 +72,7 @@ router.post('/register', (req, res, next) => {
 router.post('/login', (req, res, next) => {
 
   var { email, password } = req.body;
-  console.log(email,password);
+  console.log(email, password);
   if (!email || !password) {
     req.flash('error', 'Email/Password is required');
     return res.redirect('/users/login');
@@ -127,71 +127,125 @@ router.get('/logout', (req, res) => {
 
 
 //forgot password
-router.get('/forgot',(req,res)=>{
+router.get('/forgot', (req, res) => {
   res.render('forgotPassword');
+})
+
+//forgot email render
+router.get('/forgot/email', (req, res) => {
+  res.render('forgotEmail');
 })
 
 
 //mail send 
-router.post('/forgot',(req,res,next)=>{
+router.post('/forgot/email', async function (req, res, next) {
 
-console.log(req.body);
-const {email}=req.body;
-let otp= Math.floor(Math.random()*1000000)+1;
-req.body.otp=otp;
-//check mail exist or not 
-User.find({email:email},(err,user)=>{
-  if(err)return next(err);
-  if(user){
- 
-    sendMail.Mail(email,otp);
-    //save the otp in database
-    res.redirect('/users/otp')
 
+
+  console.log(req.body);
+  const { email } = req.body;
+  const user = await User.findOne({ email: email })
+  if (user) {
+    console.log('user found for forgot password', user);
+    let otp = Math.floor(Math.random() * 1000000) + 1;
+    //req.body.otp=otp;
+    user.otp = otp;
+    await user.save()
+    const updateduser = await User.findOne({ otp: otp })
+    if (updateduser) {
+      sendMail.Mail(email, otp);
+      res.render('forgotOtp');
+    } else {
+      return next()
+    }
+  } else {
+    res.redirect('/users/register');
   }
-})
- 
-  res.render('otp');
+
+
+
+
 })
 
 
 //render otp page
-router.get('/otp',(req,res)=>{
+router.get('/otp', (req, res) => {
   res.render('otp');
 })
 
 //check for otp
-router.post('/otp',(req,res,next)=>{
-  //console.log(req.body);
-  //match the otp then 
-  let otp=req.body.otp;
-  //find the user is registered or not
-  User.find({otp:otp},(err,user)=>{
-    if(err)return next(err);
-    //console.log(user);
-    console.log(otp,user,user[0].otp);
-    if(Number(otp)===Number(user[0].otp)){
-       //otp verified
-       req.body.verified=true;
-       req.body.otp=null;
-       console.log('otp verified');
-       User.findByIdAndUpdate(user._id,req.body,(err,updatedUser)=>{
-         if(err)return next(err);
-         console.log(updatedUser);
-         res.redirect('/users/login');
-       })
-    }
-    
+router.post('/otp', async function (req, res, next) {
 
-  })
-   
+  let otp = req.body.otp;
+
+  const user = await User.findOne({ otp: otp })
+  console.log('user is found with otp', user);
+  if (user) {
+    user.verified = true;
+    user.otp = null
+    await user.save();
+    const updateUser = await User.findOne({ _id: user._id })
+    console.log('updated user with verified field', updateUser);
+    if (updateUser) {
+      res.redirect('/users/login')
+    } else {
+      res.json({ msg: 'user is not updated' })
+    }
+  } else {
+    console.log('inside redirect');
+    res.redirect('/users/otp')
+  }
+
+
+
   //res.render('changePassword');
+
+})
+
+
+//otp for forgot password
+router.post('/forgotOtp', async function (req, res, next) {
+  let otp = req.body.otp;
+  const user = await User.findOne({ otp: otp })
+  if (user) {
+    console.log(user);
+    user.otp = null;
+    res.render('forgotPassword');
+  } else {
+    return next();
+  }
+
 })
 
 //changed password
-router.post('/new/password',(req,res)=>{
+router.post('/forgotPassword', async function (req, res) {
   //check password is updated in database or not
-  res.redirect('/users/login');
+  let email = req.body.email;
+  let password = req.body.newPassword;
+
+  console.log(email, password);
+  const user = await User.findOne({ email: email })
+
+  if (user) {
+    console.log(user);
+
+    user.password = password
+    await user.save();
+    const updatedUser = await User.findOne({ email: email })
+    if (updatedUser) {
+      console.log(updatedUser);
+      sendMail.Mail(email, 'Password is updated');
+      res.redirect('/users/login');
+    } else {
+      res.json({ msg: 'Password is not updated' })
+    }
+
+
+
+  } else {
+    res.redirect('/users/forgotPassword');
+  }
+
 })
 
 module.exports = router;
