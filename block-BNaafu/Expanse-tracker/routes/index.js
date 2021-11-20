@@ -17,16 +17,17 @@ router.get('/failure',(req,res)=>{
   res.render('failure');
 })
 
-router.get('/auth/github',(passport.authenticate('github')));
+router.get('/auth/github',passport.authenticate('github'));
 
 router.get('/auth/github/callback',passport.authenticate('github',{failureRedirect:'/failure'}),
 
 (req,res)=>{
   let error = req.flash('error')[0];
   req.session.userId = req.user.id;
-
+  console.log(error);
+  console.log('it is inside the github callback');
   res.locals.user=req.user;
-   console.log(req.user);
+   console.log('authenticated user',req.user);
    res.redirect('/articles/home');
 }
     

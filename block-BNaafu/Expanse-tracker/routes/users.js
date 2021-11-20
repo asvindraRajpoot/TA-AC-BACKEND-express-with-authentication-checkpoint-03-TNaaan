@@ -33,32 +33,44 @@ router.get('/register', (req, res, next) => {
 router.post('/register', async function (req, res, next) {
   //console.log(req.body);
 
-  let user = await User.create(req.body)
-
-  if (user) {
-    console.log('created using await', user);
-    let otp = Math.floor(Math.random() * 1000000) + 1;
-    req.body.otp = otp;
-
-
-    // console.log('',req.body,user);
-    const updatedUser = await User.findOne({ _id: user._id }, { upsert: true })
-    updatedUser.otp = otp;
-    await updatedUser.save()
-    const updatedOtpUser = await User.findOne({ _id: user._id })
-    console.log('updated user', updatedOtpUser);
-    if (updatedOtpUser) {
-      sendMail.Mail(req.body.email, otp);
-      res.redirect('/users/otp');
-
+  const email=req.body.email;
+  let foundUser=await User.find({email:email});
+  console.log('found user',foundUser)
+  if(foundUser.length===0){
+    let user = await User.create(req.body)
+    if (user) {
+      console.log('created using await', user);
+      let otp = Math.floor(Math.random() * 1000000) + 1;
+      req.body.otp = otp;
+  
+  
+      // console.log('',req.body,user);
+      const updatedUser = await User.findOne({ _id: user._id }, { upsert: true })
+      updatedUser.otp = otp;
+      await updatedUser.save()
+      const updatedOtpUser = await User.findOne({ _id: user._id })
+      console.log('updated user', updatedOtpUser);
+      if (updatedOtpUser) {
+        sendMail.Mail(req.body.email, otp);
+        res.redirect('/users/otp');
+  
+      } else {
+        res.json({ msg: 'not updated with otp' })
+  
+  
+      }
     } else {
-      res.json({ msg: 'not updated with otp' })
-
-
+      res.redirect('/users/register');
     }
-  } else {
-    res.redirect('/users/register');
+  }else{
+    let error={msg:'user already exist'}
+    res.render('logIn',{ error:error.msg})
+
   }
+  
+  
+
+  
 
 
 
@@ -130,6 +142,8 @@ router.get('/logout', (req, res) => {
 router.get('/forgot', (req, res) => {
   res.render('forgotPassword');
 })
+
+
 
 //forgot email render
 router.get('/forgot/email', (req, res) => {

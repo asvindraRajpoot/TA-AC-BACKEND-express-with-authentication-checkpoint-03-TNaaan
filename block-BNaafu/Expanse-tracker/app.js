@@ -29,7 +29,7 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 //connect to database
-mongoose.connect('mongodb://localhost/users',(err)=>{
+mongoose.connect('mongodb://localhost/expanse-tracker',(err)=>{
   console.log(err?err:'Connected to Database');
 })
 
