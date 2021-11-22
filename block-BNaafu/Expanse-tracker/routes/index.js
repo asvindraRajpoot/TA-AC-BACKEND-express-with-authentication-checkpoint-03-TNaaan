@@ -24,7 +24,7 @@ router.get('/auth/github/callback',passport.authenticate('github',{failureRedire
 (req,res)=>{
   let error = req.flash('error')[0];
   req.session.userId = req.user.id;
-  console.log(error);
+  //console.log(error);
   console.log('it is inside the github callback');
   res.locals.user=req.user;
    console.log('authenticated user',req.user);
