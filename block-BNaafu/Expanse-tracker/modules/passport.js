@@ -23,8 +23,8 @@ User.findOne({email:profile._json.email},(err,user)=>{
     if(!user){
         
         User.create(profileData,(err,addedUser)=>{
-           // console.log('in error',err);
-            if(err)return done(err);
+            console.log('in error',err,addedUser);
+            if(err)return done(err,false);
             // console.log('inside create');
             // console.log('added user in git hub',addedUser);
             return done(null,addedUser);
@@ -72,7 +72,7 @@ User.findOne({email:profile._json.email},(err,user)=>{
 }))
 
 passport.serializeUser((user,done)=>{
-    console.log(user);
+    console.log(user,'inside serialize user');
     done(null,user.id);
     
 })

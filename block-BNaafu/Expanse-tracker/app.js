@@ -48,7 +48,7 @@ app.use(session({
   secret:process.env.SECRET,
   resave:false,
   saveUninitialized:false,
-  store:  MongoStore.create({mongoUrl:'mongodb://localhost/blog'})
+  store:  MongoStore.create({mongoUrl:'mongodb://localhost/expanse-tracker'})
 }))
 
 app.use(passport.initialize());

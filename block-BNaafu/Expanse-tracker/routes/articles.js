@@ -31,6 +31,7 @@ router.get('/view/saving', (req, res, next) => {
 //render article home page
 router.get('/home', auth.loggedInUser, (req, res) => {
   let error = req.flash('error')[0];
+  console.log('inside home router');
   res.render('home', { error });
 })
 

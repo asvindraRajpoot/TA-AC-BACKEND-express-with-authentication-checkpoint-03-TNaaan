@@ -2,6 +2,7 @@ var User=require('../models/user');
 
 module.exports={
     loggedInUser:(req,res,next)=>{
+        console.log('inside logged in user',req.session);
         if(req.session && req.session.userId){
             next();
         }else if(req.session && req.session.passport){
