@@ -1,0 +1,26 @@
+<%include partials/header %>
+
+    <main class="container flex center">
+      <div class="main form-h1">
+        <h1>Details of Article</h1>
+      </div>
+      <div class="container">
+        <ul>
+          <li class="title"><%=article.title%></li>
+          <li><%=article.author.name%></li>
+          <li class="tags">
+            <%article.tags.forEach(tag=>{%>
+            <span><%=tag%></span>
+
+            <%})%>
+          </li>
+          <p><%=article.description%></p>
+          
+        </ul>
+      </div>
+      <!-- - content of comment
+- article Id for reference to article
+- likes
+- author -->
+    </main>
+ <%include partials/footer%>
